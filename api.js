@@ -7,8 +7,8 @@ class Contenedor {
     // Recibe un objeto, lo guarda en el archivo, devuelve el id asignado.
     async save(object) {
         try {
-            const contenido = await fs.promises.readFile(`./${this.file}`, 'utf8')
-                ;
+            const contenido = await fs.promises.readFile(`./${this.file}`, 'utf8');
+            let array = []
             if (contenido === '') {
                 object.id = 1;
                 array.push(object);
@@ -28,7 +28,7 @@ class Contenedor {
             await fs.promises.writeFile(`./${this.file}`, objectsString);
             return object.id;
         } catch (error) {
-            console.log('error al ejecutar',{ error })
+            console.log('error al ejecutar', { error })
         }
     }
     // Recibe un id y devuelve el objeto con ese id, o null si no está.
@@ -44,7 +44,7 @@ class Contenedor {
             })
             return objectEncontrado;
         } catch (error) {
-            console.log('error al ejecutar',{ error })
+            console.log('error al ejecutar', { error })
         }
     }
     // Devuelve un array con los objetos presentes en el archivo.
@@ -58,7 +58,7 @@ class Contenedor {
                 return arrayObtenido;
             };
         } catch (error) {
-            console.log('error al ejecutar',{ error })
+            console.log('error al ejecutar', { error })
         };
     };
     // const obtenerRandomInferior = (min, max) => Math.round(Math.random() * (max - min + 1)) + min;
@@ -70,7 +70,7 @@ class Contenedor {
             const posicionRandom = random(0, arrayObtenido.length - 1);
             return (arrayObtenido[posicionRandom]);
         } catch (error) {
-            console.log('error al ejecutar',{ error })
+            console.log('error al ejecutar', { error })
         }
     }
     // Elimina del archivo el objeto con el id buscado.
@@ -90,7 +90,7 @@ class Contenedor {
             await fs.promises.writeFile(`./${this.file}`, arrayString);
             return encontrado
         } catch (error) {
-            console.log('error al ejecutar',{ error });
+            console.log('error al ejecutar', { error });
         };
     };
     // Elimina todos los objetos presentes en el archivo.
@@ -98,7 +98,7 @@ class Contenedor {
         try {
             await fs.promises.writeFile(`./${this.file}`, '')
         } catch (error) {
-            console.log('error al ejecutar',{ error })
+            console.log('error al ejecutar', { error })
         }
     }
     // Recibe y actualiza un producto según su id.
@@ -115,7 +115,7 @@ class Contenedor {
             await this.save(productoUpdated)
             return productoUpdated;
         } catch (error) {
-            console.log('error al ejecutar',{ error })
+            console.log('error al ejecutar', { error })
         }
     }
 };

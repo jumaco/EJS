@@ -1,6 +1,26 @@
 {
   "dependencies": {
     "ejs": "^3.1.6",
-    "express": "^4.17.1"
-  }
+    "express": "^4.17.1",
+    "nodemon": "^2.0.14",
+    "socket.io": "^4.3.1"
+  },
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "name": "y",
+  "description": "Desafio: Motores de plantillas",
+  "version": "1.0.0",
+  "main": "server.js",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jumaco/EJS.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jumaco/EJS/issues"
+  },
+  "homepage": "https://github.com/jumaco/EJS#readme"
 }

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/style.css">
+    <script src="/socket.io/socket.io.js"></script>
+    <!-- AGREGAMOS DEFER, PARA QUE SE EJECUTE LUEGO DE CARGAR LA PAIGNA/DOM -->
+    <script defer src="/index.js"></script>
+    <title>WEBSOCKET_Sockets.IO</title>
+</head>
+
+<body>
+    <ul id="messages"></ul>
+    <form id="form" action="">
+        <div>
+            <input class="inputs" type="text" id="username" placeholder="Tu Nombre">
+        </div>
+
+        <input class="inputs" id="input" autocomplete="off" /><button>Send</button>
+    </form>
+    
+</body>
+
+</html>
