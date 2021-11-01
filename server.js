@@ -6,20 +6,24 @@ const { Server: IOServer } = require('socket.io')
 const Contenedor = require('./api');
 const contenedor = new Contenedor('./productos.json');
 
+const Chat = require('./apiChat');
+const chat = new Chat('./chat.json');
+
 const server = express();
 const PORT = 8080;
 
 server.use(express.json());
 server.use(express.urlencoded({ extended: true }));
+
 server.use('/agregar', express.static('public'));
 
 const httpServer = new HttpServer(server)
 const io = new IOServer(httpServer)
 
 
-// ------------------------------------------------------------------------------------------------------------------------------------
+// ------------------------------------------------------------------------------------------------------
 
-//############################### SOCKET.IO ###################################
+//------------------------------------------#### SOCKET.IO ####------------------------------------------
 
 // INDICAMOS QUE QUEREMOS CARGAR LOS ARCHIVOS ESTÁTICOS QUE SE ENCUENTRAN EN DICHA CARPETA
 server.use(express.static('./public/io'))
@@ -29,15 +33,17 @@ server.get('/chat', (req, res) => {
 	res.sendFile('./public/chat.html', { root: __dirname })
 })
 
-// server.get('/form-io', (req, res) => {
-//     res.sendFile('./public/form-io.html', { root: __dirname })
-// })
-
 // EL SERVIDOR FUNCIONANDO EN EL PUERTO 3000
 httpServer.listen(3000, () => console.log('SERVER SOCKET.IO ON en http://localhost:3000'))
 
 //...
-io.on('connection', (socket) => {
+io.on('connection', async (socket) => {
+	// "CONNECTION" SE EJECUTA LA PRIMERA VEZ PARA CARGAR LOS PRODUCTOS
+	const productos = await contenedor.getAll();
+	io.sockets.emit('products', productos);
+
+	const mensajes = await chat.getAll();
+	io.sockets.emit('chat historial', mensajes);
 
 	// "CONNECTION" SE EJECUTA LA PRIMERA VEZ QUE SE ABRE UNA NUEVA CONEXIÓN
 	console.log(`Usuario conectado ${socket.id}`)
@@ -61,9 +67,14 @@ io.on('connection', (socket) => {
 		console.log(`Usuario desconectado ${socket.id}`);
 	});
 
-	/*ESCUCHO LOS MENSAJES CHAT ENVIADOS*/
-	socket.on('chat message', (msg) => {
-		console.log(`message: ${msg}`);
+	/*ESCUCHO LOS MENSAJES CHAT ENVIADOS, LOS GUARDO EN CHAT.JSON*/
+	socket.on('chat message', async (msg) => {
+		let userId = socket.id
+		console.log(`chat: ${msg.usuario} dice: ${msg.mensaje}`);
+		await chat.save({
+			...msg,
+			userId
+		})
 	});
 
 	//DIFUSIÓN
@@ -73,19 +84,17 @@ io.on('connection', (socket) => {
 
 	//CARGA DE PRUDUCTO MEDIANTE SOCKET.IO
 	socket.on('new-product', async product => {
+
 		await contenedor.save(product);
 		const productos = await contenedor.getAll();
-
-		io.sockets.emit('products', {
-			productos: productos,
-			hayProductos: productos.length
-		});
+		console.log(productos)
+		io.sockets.emit('products', productos);
 	})
 })
 
 
 
-//############################### EJS ###################################
+//------------------------------------------###### EJS ######------------------------------------------
 server.set('views', './views');
 server.set('view engine', 'ejs');
 
@@ -114,25 +123,26 @@ server.get('/list-productos', async (req, res) => {
 });
 // AMBAS PÁGINAS CONTARÁN CON UN BOTÓN QUE REDIRIJA A LA OTRA.
 
-//############################### EJS para SOCKET.IO ###################################
+
+//------------------------------------------##### EJS para SOCKET.IO #####------------------------------------------
 
 // GET UN FORMULARIO DE CARGA DE PRODUCTOS EN LA RUTA ‘/form-io’
-server.get('/form-io', async (req, res) => {
-	const productos = await contenedor.getAll();
+server.get('/form-io', (req, res) => {
+	// const productos = await contenedor.getAll();
 	res.render("./pages/formularioIo", {
-		productos: productos,
-		hayProductos: productos.length
+		// productos: productos,
+		// hayProductos: productos.length
 	});
 });
 
-//############################### FIN EJS ###################################
+//------------------------------------------##### FIN EJS #####------------------------------------------
 
 // ENDPOINTS EXPRESS
 
 // GET '/' -> ENDPOINT INICIAL
 const PATH = '/';
 const callback = (request, response, next) => {
-	response.send({ mensaje: 'HOLA MUNDO! Dirigete a /form para usar EJS; /agregar para usar static' });
+	response.render("./pages/index");
 };
 server.get(PATH, callback);
 
@@ -211,5 +221,4 @@ server.listen(PORT, callbackInit);
 
 // MANEJO DE ERRORES
 server.on("error", error => console.log(`Error en servidor ${error}`))
-
 

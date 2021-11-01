@@ -8,7 +8,7 @@ socket.on('mi mensaje', data => {
 })
 
 // CUANDO EL USUARIO ESCRIBA UN MENSAJE, EL SERVIDOR LO RECIBE COMO UN CHAT MESSAGEEVENTO
-const form = document.getElementById('form');
+const formChat = document.getElementById('formChat');
 const input = document.getElementById('input');
 const username = document.getElementById('username');
 const message = {
@@ -16,7 +16,7 @@ const message = {
     username
 }
 
-form.addEventListener('submit', function (e) {
+formChat.addEventListener('submit', function (e) {
     e.preventDefault();
     if (input.value) {
         socket.emit('chat message', input.value);

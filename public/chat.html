@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+        integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
     <link rel="stylesheet" href="/style.css">
     <script src="/socket.io/socket.io.js"></script>
     <!-- AGREGAMOS DEFER, PARA QUE SE EJECUTE LUEGO DE CARGAR LA PAIGNA/DOM -->
@@ -13,13 +15,30 @@
 </head>
 
 <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="/">EJS is FUN</a>
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="/form">EJS Form - POST</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/form-io">EJS WebSocket - SocketIo</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/chat">Chat HTML - SocketIo</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/list-productos">EJS Listado de productos</a>
+            </li>
+        </ul>
+    </nav>
     <ul id="messages"></ul>
-    <form id="form" action="">
+    <form id="formChat" action="">
         <div>
-            <input class="inputs" type="text" id="username" placeholder="Tu Nombre">
+            <input class="inputsChat" type="text" id="username" placeholder="Tu Nombre">
         </div>
 
-        <input class="inputs" id="input" autocomplete="off" /><button>Send</button>
+        <input class="inputsChat" id="input" autocomplete="off" /><button>Send</button>
     </form>
     
 </body>
